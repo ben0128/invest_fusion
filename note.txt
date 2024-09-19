@@ -1,0 +1,14 @@
+前端 nginx.conf 配置反向代理 還沒完成
+
+docker build -t benwang0128/price-feed-service:latest ./backend/price-feed-service
+docker build -t benwang0128/user-auth-service:latest ./backend/user-auth-service
+docker build -t benwang0128/frontend:latest ./frontend
+
+docker push benwang0128/price-feed-service:latest
+docker push benwang0128/user-auth-service:latest
+docker push benwang0128/frontend:latest
+
+// 本地端拉取並啟動
+docker run -d -p 3100:3100 benwang0128/price-feed-service:latest
+docker run -d -p 3200:3200 benwang0128/user-auth-service:latest
+docker run -d -p 80:80 benwang0128/frontend:latest
