@@ -21,6 +21,9 @@ services:
       - NODE_ENV=production
       # 開發環境
       # - NODE_ENV=development
+    depends_on:
+      - redis
+      - rabbitmq
 
   user-auth-service:
     build:
@@ -32,3 +35,17 @@ services:
       - NODE_ENV=production
       # 開發環境
       # - NODE_ENV=development
+    depends_on:
+      - redis
+      - rabbitmq
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
