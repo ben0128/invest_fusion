@@ -1,0 +1,22 @@
+# 忽略構建輸出目錄
+dist
+out
+.next
+
+# 忽略節點模塊
+node_modules
+
+# 忽略配置文件
+*.config.js
+*.config.ts
+
+# 忽略測試文件
+**/*.test.ts
+**/*.spec.ts
+
+# 忽略類型定義文件
+**/*.d.ts
+
+# 忽略其他不需要 lint 的文件
+.DS_Store
+*.log

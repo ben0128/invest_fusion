@@ -6,10 +6,14 @@
     "dev": "bun --watch src/index.ts",
     "build": "bun build src/index.ts --target bun --outdir ./dist",
     "start": "NODE_ENV=production bun dist/index.js",
-    "test": "bun test"
+    "test": "bun test",
+    "lint": "eslint ."
   },
   "devDependencies": {
-    "@types/bun": "^1.1.9"
+    "@types/bun": "^1.1.9",
+    "@typescript-eslint/eslint-plugin": "^8.6.0",
+    "@typescript-eslint/parser": "^8.6.0",
+    "eslint": "^9.10.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

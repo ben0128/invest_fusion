@@ -6,3 +6,5 @@ const app = new Elysia()
     .listen(3100)
 
 console.log('price-feed-service start at http://localhost:3100')
+
+export default app
