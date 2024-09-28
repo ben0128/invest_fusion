@@ -1,22 +1,14 @@
-.PHONY: all build push pull-dependencies lint run
+.PHONY: all build push pull-dependencies run
 
 # 定義變數
 DOCKER_USERNAME := benwang0128
 BACKEND_SERVICES := price-feed-service user-auth-service
 FRONTEND_SERVICE := frontend
 
-ifeq ($(OS),Windows_NT)
-    CURRENT_DIR := %CD%
-    PATH_SEP := \
-else
-    CURRENT_DIR := $$(pwd)
-    PATH_SEP := /
-endif
-
 # 主要目標：執行所有操作
-all: build push pull-dependencies lint run
+all: build push pull-dependencies run
 
-dev: build lint run
+dev: build run
 
 # 構建所有服務
 build:
@@ -39,24 +31,13 @@ push:
 	docker push $(DOCKER_USERNAME)/$(FRONTEND_SERVICE):latest;
 	@echo "推送完成";
 
-# 拉取依賴的鏡像（Redis 和 RabbitMQ）
+# 拉取依賴的鏡像（Redis 和 Kafka)
 pull-dependencies:
 	@echo "拉取 Redis 鏡像..."
 	docker pull redis:latest
-	@echo "拉取 RabbitMQ 鏡像..."
-	docker pull rabbitmq:3-management
+	@echo "拉取 Kafka 鏡像..."
+	docker pull wurstmeister/kafka:latest
 
-lint:
-	@echo "開始 lint 所有服務..."
-	@for service in $(BACKEND_SERVICES); do \
-		echo "lint $$service..."; \
-		docker run --rm -v "$(CURRENT_DIR)$(PATH_SEP)backend$(PATH_SEP)$$service":/app -w /app $(DOCKER_USERNAME)/$$service:latest bun run lint; \
-	done
-	@echo "lint 前端服務..."; \
-	docker run --rm -v "$(CURRENT_DIR)$(PATH_SEP)frontend":/app -w /app $(DOCKER_USERNAME)/$(FRONTEND_SERVICE):latest bun run lint; \
-	@echo "lint 完成";
-
-# 個別服務的構建目標
 price-feed-service:
 	docker build -t $(DOCKER_USERNAME)/price-feed-service:latest ./backend/price-feed-service
 
