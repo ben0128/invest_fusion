@@ -8,12 +8,12 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - price-feed-service
+      - price-fetch-service
       - user-auth-service
 
-  price-feed-service:
+  price-fetch-service:
     build:
-      context: ./backend/price-feed-service
+      context: ./backend/price-fetch-service
       dockerfile: Dockerfile
     ports:
       - "3100:3000"

@@ -1,5 +1,5 @@
 {
-  "name": "user-auth-service",
+  "name": "price-distribution-service",
   "module": "index.ts",
   "type": "module",
   "scripts": {

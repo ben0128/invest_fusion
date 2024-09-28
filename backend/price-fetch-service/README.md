@@ -1,4 +1,4 @@
-# price-feed-service
+# price-fetch-service
 
 To install dependencies:
 

@@ -1,6 +1,6 @@
 FROM oven/bun:1.1.28
 
-WORKDIR /backend/price-feed-service
+WORKDIR /backend/price-fetch-service
 
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile || bun install
