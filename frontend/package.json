@@ -3,8 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun --watch src/index.ts",
-    "build": "bun build src/index.ts --target bun --outdir ./dist",
+    "dev": "bun --watch src/index.tsx",
+    "build": "bun build src/index.tsx --target bun --outdir ./dist",
     "start": "NODE_ENV=production bun dist/index.js",
     "test": "bun test",
     "lint": "eslint .",
@@ -12,6 +12,8 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
     "eslint": "^9.10.0"
