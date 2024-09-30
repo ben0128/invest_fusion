@@ -2,8 +2,8 @@ FROM oven/bun:1.1.28 as build
 
 WORKDIR /frontend
 
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile || bun install
+# COPY package.json bun.lockb ./
+# RUN bun install --frozen-lockfile || bun install
 
 COPY . .
 RUN bun run build

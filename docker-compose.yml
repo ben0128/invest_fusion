@@ -11,6 +11,9 @@ services:
       - price-distribution-service
       - redis
       - kafka
+    volumes:
+      - ./frontend/:/frontend
+      - ./frontend/node_modules:/frontend/node_modules
 
   price-fetch-service:
     build:
@@ -19,12 +22,14 @@ services:
     ports:
       - "3100:3000"
     environment:
-      - NODE_ENV=production
-      # 開發環境
-      # - NODE_ENV=development
+      # - NODE_ENV=production
+      - NODE_ENV=development
     depends_on:
       - redis
       - kafka
+    volumes:
+      - ./backend/price-fetch-service/:/backend/price-fetch-service
+      - ./backend/price-fetch-service/node_modules:/backend/price-fetch-service/node_modules
 
   price-distribution-service:
     build:
@@ -34,13 +39,13 @@ services:
       - "3300:3000"
     environment:
       # - NODE_ENV=production
-      # 開發環境
       - NODE_ENV=development
     depends_on:
       - redis
       - kafka
     volumes:
-      - ./backend/price-distribution-service:/backend/price-distribution-service
+      - ./backend/price-distribution-service/:/backend/price-distribution-service
+      - ./backend/price-distribution-service/node_modules:/backend/price-distribution-service/node_modules
 
   user-auth-service:
     build:
@@ -49,12 +54,15 @@ services:
     ports:
       - "3200:3000"
     environment:
-      - NODE_ENV=production
+      # - NODE_ENV=production
       # 開發環境
-      # - NODE_ENV=development
+      - NODE_ENV=development
     depends_on:
       - redis
       - kafka
+    volumes:
+      - ./backend/user-auth-service/:/backend/user-auth-service
+      - ./backend/user-auth-service/node_modules:/backend/user-auth-service/node_modules
 
   redis:
     image: redis:latest
