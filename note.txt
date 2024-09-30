@@ -1,2 +1,5 @@
 前端 nginx.conf 配置反向代理 還沒完成
 前端使用react+next.js 配上後端使用bun+elysia
+kafka single node 還沒完成
+redis 還沒完成
+grpc 還沒完成

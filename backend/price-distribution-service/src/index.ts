@@ -36,6 +36,6 @@ function sendPricesToUser(userId: string, prices: unknown[]) {
 
 setupKafka().catch(console.error);
 
-console.log('Price Distribution Service started at http://localhost:3300');
+console.log('Price Dis       tribution Service started at http://localhost:3300');
 
 export default app;

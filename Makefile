@@ -37,7 +37,7 @@ pull-dependencies:
 	@echo "拉取 Redis 鏡像..."
 	docker pull redis:latest
 	@echo "拉取 Kafka 鏡像..."
-	docker pull wurstmeister/kafka:latest
+	docker pull bitnami/kafka:latest
 
 price-distribution-service:
 	docker build -t $(DOCKER_USERNAME)/$(DOCKER_REPO):price-distribution-service ./backend/price-distribution-service
@@ -57,7 +57,18 @@ run:
 	docker run -d -p 3300:3300 --name price-distribution-service --restart unless-stopped $(DOCKER_USERNAME)/$(DOCKER_REPO):price-distribution-service
 	docker run -d -p 80:80 --name frontend --restart unless-stopped $(DOCKER_USERNAME)/$(DOCKER_REPO):frontend
 	docker run -d -p 6379:6379 --name redis --restart unless-stopped redis:latest
-	docker run -d -p 9092:9092 -p 2181:2181 --name kafka --restart unless-stopped bitnami/kafka:latest
+	docker run -d --name kafka -p 9092:9092 \
+		-e KAFKA_KRAFT_CLUSTER_ID=$(shell openssl rand -hex 16) \
+		-e KAFKA_CFG_NODE_ID=1 \
+		-e KAFKA_CFG_PROCESS_ROLES=broker,controller \
+		-e KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093 \
+		-e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 \
+		-e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
+		-e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT \
+		-e KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER \
+		-e ALLOW_PLAINTEXT_LISTENER=yes \
+		--restart unless-stopped \
+		bitnami/kafka:latest
 
 stop:
 	@echo "關閉所有服務..."
