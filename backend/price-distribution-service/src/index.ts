@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 // import { kafka, consumer } from './config/kafka';
 
-const app = new Elysia()
+const app = new Elysia({ prefix: `/api/${process.env.API_VERSION}` })
   .get('/', () => 'Price Distribution Service')
   .listen(3300);
 

@@ -6,11 +6,15 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
 }
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL") // development
+  // url      = "mongodb://admin:admin@localhost:27017/invest_fusion?authSource=admin"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+ // development
   // url      = env("ATLAS_URL")` // production
 }
 

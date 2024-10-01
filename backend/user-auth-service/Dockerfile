@@ -2,10 +2,14 @@ FROM oven/bun:1.1.28
 
 WORKDIR /backend/user-auth-service
 
-# COPY package.json bun.lockb ./
+COPY package.json bun.lockb ./
 # RUN bun install --frozen-lockfile || bun install
 
-RUN bunx prisma generate
+# 複製 prisma 的 schema 到容器中
+COPY prisma/schema.prisma ./prisma/
+
+# 生成 prisma client
+RUN bunx prisma generate --no-engine
 
 COPY . .
 

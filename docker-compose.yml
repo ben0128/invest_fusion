@@ -11,6 +11,7 @@ services:
       - price-distribution-service
       - redis
       - kafka
+      - mongodb
     volumes:
       - ./frontend/:/frontend
       - ./frontend/node_modules:/frontend/node_modules
@@ -21,12 +22,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3100:3000"
+    env_file:
+      - ./backend/price-fetch-service/.env
     environment:
       # - NODE_ENV=production
       - NODE_ENV=development
     depends_on:
       - redis
       - kafka
+      - mongodb
     volumes:
       - ./backend/price-fetch-service/:/backend/price-fetch-service
       - ./backend/price-fetch-service/node_modules:/backend/price-fetch-service/node_modules
@@ -37,12 +41,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3300:3000"
+    env_file:
+      - ./backend/price-distribution-service/.env
     environment:
       # - NODE_ENV=production
       - NODE_ENV=development
     depends_on:
       - redis
       - kafka
+      - mongodb
     volumes:
       - ./backend/price-distribution-service/:/backend/price-distribution-service
       - ./backend/price-distribution-service/node_modules:/backend/price-distribution-service/node_modules
@@ -53,6 +60,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3200:3000"
+    env_file:
+      - ./backend/user-auth-service/.env
     environment:
       # - NODE_ENV=production
       # 開發環境
@@ -67,6 +76,7 @@ services:
 
   redis:
     image: redis:latest
+    pull_policy: if_not_present
     ports:
       - "6379:6379"
     volumes:
@@ -74,6 +84,7 @@ services:
 
   kafka:
     image: bitnami/kafka:latest
+    pull_policy: if_not_present
     ports:
       - '9092:9092'
     environment:
@@ -100,6 +111,7 @@ services:
 
   mongodb:
     image: mongo:latest
+    pull_policy: if_not_present
     ports:
       - '27017:27017'
     environment:
@@ -108,6 +120,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
       - mongodb_data:/data/db
+
 volumes:
   redis_data: {}  # 定義卷
   kafka_data: {}  # 定義卷
