@@ -1,38 +1,35 @@
 import { Elysia } from 'elysia';
-import { PrismaClient } from '@prisma/client';
-import { withAccelerate } from '@prisma/extension-accelerate';
+import { prisma } from './prisma-connect/prisma-accelerate';
 
-const prisma = new PrismaClient().$extends(withAccelerate());
-// const prisma = new PrismaClient();
 const app = new Elysia({ prefix: `/api/${process.env.API_VERSION}` })
   .get('/', async() => {
-    return { message: 'Hello World' };
+    try {
+      const userTable = await prisma.user.count({});
+      console.log('userTable', userTable);
+      if (userTable > 0) {
+        return { message: 'User表存在於MongoDB中' };
+      } else {
+        return { message: 'User表在MongoDB中不存在或為空' };
+      }
+    } catch (error) {
+      console.error('檢查User表時發生錯誤:', error);
+      return { message: '無法確認User表狀態' };
+    }
   });
 
-app.post('/register', async({ body }) => {
+app.post('/register', async() => {
   // const { email } = body;
-  const emailtry = 'a313213@gmail.com';
+  const emailtry = 'sds3@gmail.com';
   console.log('check email', emailtry);
-  const user = await prisma.user.findUnique({
-    where: {
+  const user = await prisma.user.create({
+    data: {
       email: emailtry,
     },
-    // cacheStrategy: { ttl: 60 },
   });
-  if (user) {
-    return { message: 'User already exists' };
-  }
+  console.log('user', user);
 
   return user;
 });
-
-// app.get('/user/:id', async({ params }) => {
-//   const { id } = params;
-//   const user = await prisma.user.findUnique({
-//     where: { id },
-//   });
-//   return user;
-// });
 
 app.listen(3200);
 

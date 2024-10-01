@@ -68,8 +68,8 @@ services:
       - NODE_ENV=development
     depends_on:
       - redis
-      # - kafka
       - mongodb
+      # - kafka
     volumes:
       - ./backend/user-auth-service/:/backend/user-auth-service
       - ./backend/user-auth-service/node_modules:/backend/user-auth-service/node_modules
