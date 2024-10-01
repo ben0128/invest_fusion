@@ -1,27 +1,29 @@
 import { Elysia } from 'elysia';
-import { kafka, producer, consumer } from './config/kafka';
+import { PrismaClient } from '@prisma/client';
 
-const app = new Elysia()
-  .get('/', ({ path }) => path)
-  .post('/hello', 'Do you miss me?')
-  .listen(3200);
+const prisma = new PrismaClient();
+const app = new Elysia();
 
-async function setupKafka() {
-  await producer.connect();
-  await consumer.connect();
-  await consumer.subscribe({ topic: 'user-events', fromBeginning: true });
-
-  await consumer.run({
-    eachMessage: async({ topic, partition, message }) => {
-      console.log({
-        value: message.value?.toString(),
-      });
+app.post('/register', async({ body }) => {
+  const { email, name, password } = body;
+  const user = await prisma.user.create({
+    data: {
+      email,
+      name,
+      password, // 注意: 實際應用中應該對密碼進行加密
     },
   });
-}
+  return user;
+});
 
-setupKafka().catch(console.error);
+app.get('/user/:id', async({ params }) => {
+  const { id } = params;
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+  return user;
+});
 
-console.log('user-auth-service start at http://localhost:3200');
+app.listen(3200);
 
-export default app;
+console.log('User Auth Service started at http://localhost:3200');

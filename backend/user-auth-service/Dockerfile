@@ -5,6 +5,8 @@ WORKDIR /backend/user-auth-service
 # COPY package.json bun.lockb ./
 # RUN bun install --frozen-lockfile || bun install
 
+RUN bunx prisma generate
+
 COPY . .
 
 RUN bun run build
