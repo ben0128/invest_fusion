@@ -7,7 +7,7 @@ BACKEND_SERVICES := price-fetch-service price-distribution-service user-auth-ser
 FRONTEND_SERVICE := frontend
 
 # 主要目標：執行所有操作
-all: build push pull-dependencies run
+all: build push run db
 
 dev: build run
 
@@ -37,24 +37,12 @@ pull-dependencies:
 run:
 	docker compose up -d
 
-# run:
-# 	docker run -d -p 3100:3000 --name price-fetch-service --restart unless-stopped $(DOCKER_USERNAME)/$(DOCKER_REPO):price-fetch-service
-# 	docker run -d -p 3200:3000 --name user-auth-service --restart unless-stopped $(DOCKER_USERNAME)/$(DOCKER_REPO):user-auth-service
-# 	docker run -d -p 3300:3000 --name price-distribution-service --restart unless-stopped $(DOCKER_USERNAME)/$(DOCKER_REPO):price-distribution-service
-# 	docker run -d -p 80:80 --name frontend --restart unless-stopped $(DOCKER_USERNAME)/$(DOCKER_REPO):frontend
-# 	docker run -d -p 6379:6379 --name redis --restart unless-stopped redis:latest
-# 	docker run -d --name kafka -p 9092:9092 \
-# 		-e KAFKA_KRAFT_CLUSTER_ID=$(shell openssl rand -hex 16) \
-# 		-e KAFKA_CFG_NODE_ID=1 \
-# 		-e KAFKA_CFG_PROCESS_ROLES=broker,controller \
-# 		-e KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093 \
-# 		-e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 \
-# 		-e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
-# 		-e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT \
-# 		-e KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER \
-# 		-e ALLOW_PLAINTEXT_LISTENER=yes \
-# 		--restart unless-stopped \
-# 		bitnami/kafka:latest
+# 執行 Prisma 資料庫推送
+db:
+	@echo "執行 Prisma 資料庫推送..."
+	cd backend/user-auth-service/prisma && bunx prisma db push
+	@echo "Prisma 資料庫推送完成"
+
 
 # 停止並移除所有服務
 stop:
