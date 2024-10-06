@@ -5,18 +5,33 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider  = "mongodb"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_DATABASE_URL")
 }
 
 model User {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  email       String
-  phoneNumber String?
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  email         String
+  name          String?
+  level         Int // 用戶身分: 0: 管理者, 1: 一般用戶, 2:訂閱用戶
+  walletAddress String[] // 各鍊的錢包地址, 放入錢包自動讀取內部資產
+  assets        Asset[] // 各市場的資產, 支援用戶手動放入單一資產
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Asset {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  market String // CR: 加密貨幣, US: 美股, TW: 台股, HK: 港股, CN: 中股, JP: 日股, KR: 韓股, SG: 星股
+  subMarket String? // 市場內的細分市場, 例如: 加密貨幣有側鍊
+  amount Float
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String? @db.ObjectId
 }
